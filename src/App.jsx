@@ -72,15 +72,6 @@ const cardCls = 'rounded border border-[#6B6751] bg-[#F3EEE3] p-4'
 const thCls = 'border-b border-[#6B6751] px-3 py-2 text-left text-xs font-semibold uppercase text-[#6B6751]'
 const tdCls = 'border-b border-[#6B6751]/40 px-3 py-2 text-sm text-[#28374A]'
 
-function Requisitos({ codigos }) {
-  return (
-    <div className="mt-8 inline-block rounded border border-dashed border-[#6B6751] bg-[#F3EEE3] px-3 py-2 text-xs text-[#6B6751]">
-      <span className="font-semibold text-[#28374A]">Requisitos atendidos: </span>
-      {codigos.join(', ')}
-    </div>
-  )
-}
-
 function Placeholder({ className = '' }) {
   return (
     <div className={`relative overflow-hidden rounded border border-[#6B6751] bg-[#F3EEE3] ${className}`}>
@@ -108,8 +99,8 @@ function TagEstoqueBaixo() {
 
 function Titulo({ titulo, subtitulo }) {
   return (
-    <div className="mb-6">
-      <h1 className="text-2xl font-bold text-[#28374A]">{titulo}</h1>
+    <div className="mb-4 md:mb-6">
+      <h1 className="text-xl font-bold text-[#28374A] md:text-2xl">{titulo}</h1>
       {subtitulo && <p className="mt-1 text-sm text-[#6B6751]">{subtitulo}</p>}
     </div>
   )
@@ -171,7 +162,6 @@ function TelaLogin({ onEntrar }) {
             ))}
           </div>
         </form>
-        <Requisitos codigos={['RF07', 'RNF01', 'RNF03']} />
       </div>
     </div>
   )
@@ -205,7 +195,7 @@ function ModalNovoItem({ itens, onFechar, onSalvar }) {
           <h2 className="font-semibold text-[#28374A]">Novo item</h2>
           <button className="text-[#6B6751]" onClick={onFechar}>✕</button>
         </div>
-        <div className="grid grid-cols-2 gap-3 p-4">
+        <div className="grid max-h-[70vh] grid-cols-1 gap-3 overflow-y-auto p-4 sm:grid-cols-2">
           <div>
             <label className="mb-1 block text-xs font-semibold text-[#6B6751]">Código (único) *</label>
             <input className={inputCls} value={form.codigo} onChange={(e) => alterar('codigo', e.target.value)} placeholder="Ex: PAP-011" />
@@ -216,7 +206,7 @@ function ModalNovoItem({ itens, onFechar, onSalvar }) {
             <input className={inputCls} value={form.nome} onChange={(e) => alterar('nome', e.target.value)} />
             <Erro campo="nome" />
           </div>
-          <div className="col-span-2">
+          <div className="sm:col-span-2">
             <label className="mb-1 block text-xs font-semibold text-[#6B6751]">Descrição</label>
             <textarea className={inputCls} rows={2} value={form.descricao} onChange={(e) => alterar('descricao', e.target.value)} />
           </div>
@@ -277,40 +267,65 @@ function TelaEstoque({ itens, setItens }) {
   return (
     <div>
       <Titulo titulo="Estoque / Cadastro de itens" subtitulo="Consulte, filtre e cadastre os materiais da escola." />
-      <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <div className={cardCls}>
-          <div className="text-xs text-[#6B6751]">Itens cadastrados</div>
-          <div className="text-2xl font-bold text-[#28374A]">{itens.length}</div>
+      <div className="mb-4 grid grid-cols-3 gap-2 sm:gap-3">
+        <div className="rounded border border-[#6B6751] bg-[#F3EEE3] p-3 sm:p-4">
+          <div className="text-xs text-[#6B6751]">Cadastrados</div>
+          <div className="text-xl font-bold text-[#28374A] sm:text-2xl">{itens.length}</div>
         </div>
-        <div className={cardCls}>
-          <div className="text-xs text-[#6B6751]">Itens ativos</div>
-          <div className="text-2xl font-bold text-[#28374A]">{itens.filter((i) => i.ativo).length}</div>
+        <div className="rounded border border-[#6B6751] bg-[#F3EEE3] p-3 sm:p-4">
+          <div className="text-xs text-[#6B6751]">Ativos</div>
+          <div className="text-xl font-bold text-[#28374A] sm:text-2xl">{itens.filter((i) => i.ativo).length}</div>
         </div>
-        <div className="rounded border border-[#754437] bg-[#F3EEE3] p-4">
-          <div className="text-xs text-[#754437]">Com estoque baixo</div>
-          <div className="text-2xl font-bold text-[#754437]">{totalBaixo}</div>
+        <div className="rounded border border-[#754437] bg-[#F3EEE3] p-3 sm:p-4">
+          <div className="text-xs text-[#754437]">Estoque baixo</div>
+          <div className="text-xl font-bold text-[#754437] sm:text-2xl">{totalBaixo}</div>
         </div>
       </div>
 
       <div className={`${cardCls} mb-4 flex flex-wrap items-end gap-3`}>
-        <div className="min-w-56 flex-1">
+        <div className="w-full sm:min-w-56 sm:flex-1">
           <label className="mb-1 block text-xs font-semibold text-[#6B6751]">Buscar por nome, código ou categoria</label>
           <input className={inputCls} value={busca} onChange={(e) => setBusca(e.target.value)} placeholder="Ex: pap, ESC-002, Limpeza..." />
         </div>
-        <div className="w-48">
+        <div className="w-full sm:w-48">
           <label className="mb-1 block text-xs font-semibold text-[#6B6751]">Categoria</label>
           <select className={inputCls} value={categoria} onChange={(e) => setCategoria(e.target.value)}>
             <option value="">Todas</option>
             {CATEGORIAS.map((c) => <option key={c}>{c}</option>)}
           </select>
         </div>
-        <button className={btnSecundario} onClick={() => { setBusca(''); setCategoria('') }}>Limpar</button>
-        <button className={btnPrimario} onClick={() => { setMensagem(''); setModal(true) }}>+ Novo item</button>
+        <div className="flex w-full gap-2 sm:w-auto">
+          <button className={`${btnSecundario} flex-1 sm:flex-none`} onClick={() => { setBusca(''); setCategoria('') }}>Limpar</button>
+          <button className={`${btnPrimario} flex-1 sm:flex-none`} onClick={() => { setMensagem(''); setModal(true) }}>+ Novo item</button>
+        </div>
       </div>
 
       {mensagem && <div className="mb-4 rounded border border-[#6B6751] bg-[#F3EEE3] px-3 py-2 text-sm text-[#6B6751]">{mensagem}</div>}
 
-      <div className="overflow-x-auto rounded border border-[#6B6751] bg-[#F3EEE3]">
+      <div className="space-y-2 md:hidden">
+        {filtrados.map((i) => (
+          <div key={i.codigo} className={`rounded border bg-[#F3EEE3] p-3 ${i.ativo && estoqueBaixo(i) ? 'border-[#754437]' : 'border-[#6B6751]'}`}>
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <div className="font-mono text-xs text-[#6B6751]">{i.codigo}</div>
+                <div className="font-medium text-[#28374A]">{i.nome}</div>
+                <div className="text-xs text-[#6B6751]">{i.categoria} · {i.unidade}</div>
+              </div>
+              <div className="text-right">
+                <div className={`text-xl font-bold ${estoqueBaixo(i) ? 'text-[#754437]' : 'text-[#28374A]'}`}>{i.quantidade}</div>
+                <div className="text-xs text-[#6B6751]">mín. {i.minima}</div>
+              </div>
+            </div>
+            <div className="mt-2 flex flex-wrap gap-1">
+              <span className={`inline-block rounded border px-2 py-0.5 text-xs ${i.ativo ? 'border-[#6B6751] text-[#6B6751]' : 'border-[#28374A] text-[#28374A] line-through'}`}>{i.ativo ? 'Ativo' : 'Inativo'}</span>
+              {i.ativo && estoqueBaixo(i) && <TagEstoqueBaixo />}
+            </div>
+          </div>
+        ))}
+        {!filtrados.length && <div className="py-6 text-center text-sm text-[#6B6751]">Nenhum item encontrado.</div>}
+      </div>
+
+      <div className="hidden overflow-x-auto rounded border border-[#6B6751] bg-[#F3EEE3] md:block">
         <table className="w-full">
           <thead>
             <tr>
@@ -347,7 +362,6 @@ function TelaEstoque({ itens, setItens }) {
       </div>
 
       {modal && <ModalNovoItem itens={itens} onFechar={() => setModal(false)} onSalvar={salvar} />}
-      <Requisitos codigos={['RF01', 'RF02', 'RF05', 'RF11', 'RN01', 'RN02', 'RN05', 'RN11']} />
     </div>
   )
 }
@@ -400,15 +414,30 @@ function TelaSolicitacao({ usuario, itens, solicitacoes, setSolicitacoes }) {
             <input type="number" min="1" className={inputCls} value={qtd} onChange={(e) => setQtd(e.target.value)} />
           </div>
         </div>
-        <div className="mt-4 flex items-center gap-3">
-          <button className={btnPrimario} onClick={solicitar}>Solicitar</button>
+        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+          <button className={`${btnPrimario} w-full sm:w-auto`} onClick={solicitar}>Solicitar</button>
           {erro && <span className="text-sm text-[#754437]">{erro}</span>}
           {sucesso && <span className="text-sm text-[#6B6751]">{sucesso}</span>}
         </div>
       </div>
 
       <h2 className="mb-2 font-semibold text-[#28374A]">Minhas solicitações</h2>
-      <div className="overflow-x-auto rounded border border-[#6B6751] bg-[#F3EEE3]">
+      <div className="space-y-2 md:hidden">
+        {minhas.map((s) => (
+          <div key={s.id} className={cardCls}>
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <div className="font-medium text-[#28374A]">{nomeItem(s.codigo)}</div>
+                <div className="text-xs text-[#6B6751]">{s.data} · Qtd. {s.qtd}</div>
+              </div>
+              <TagStatus status={s.status} />
+            </div>
+            {(s.justificativa || s.registro) && <div className="mt-2 text-xs text-[#6B6751]">{s.justificativa || s.registro}</div>}
+          </div>
+        ))}
+        {!minhas.length && <div className="py-6 text-center text-sm text-[#6B6751]">Você ainda não fez solicitações.</div>}
+      </div>
+      <div className="hidden overflow-x-auto rounded border border-[#6B6751] bg-[#F3EEE3] md:block">
         <table className="w-full">
           <thead>
             <tr>
@@ -433,7 +462,6 @@ function TelaSolicitacao({ usuario, itens, solicitacoes, setSolicitacoes }) {
           </tbody>
         </table>
       </div>
-      <Requisitos codigos={['RF06', 'RF08', 'RN06', 'RN08']} />
     </div>
   )
 }
@@ -451,7 +479,6 @@ function TelaAprovacao({ usuario, itens, setItens, solicitacoes, setSolicitacoes
           <div className="font-semibold">Acesso restrito</div>
           <div className="text-sm">Somente usuários com perfil Gerente podem aprovar ou rejeitar solicitações. Use o seletor de perfil na barra superior para simular.</div>
         </div>
-        <Requisitos codigos={['RF03', 'RF09', 'RF10', 'RN03', 'RN09', 'RN10']} />
       </div>
     )
   }
@@ -485,13 +512,52 @@ function TelaAprovacao({ usuario, itens, setItens, solicitacoes, setSolicitacoes
     atualizar(s.id, { status: 'Retirada', registro: `${s.registro} · Retirada registrada em ${agora()}` })
   }
 
+  const renderAcoes = (s) => (rejeitando === s.id ? (
+    <div className="w-full space-y-2 md:w-64">
+      <label className="block text-xs font-semibold text-[#754437]">Justificativa *</label>
+      <textarea className={inputCls} rows={2} value={justificativa} onChange={(e) => setJustificativa(e.target.value)} placeholder="Motivo da rejeição" />
+      <div className="flex gap-2">
+        <button className={`${btnPerigo} flex-1 md:flex-none`} onClick={() => confirmarRejeicao(s)}>Confirmar rejeição</button>
+        <button className={`${btnContorno} flex-1 md:flex-none`} onClick={() => { setRejeitando(null); setJustificativa(''); setErro('') }}>Cancelar</button>
+      </div>
+    </div>
+  ) : (
+    <div className="flex gap-2">
+      <button className={`${btnSecundario} flex-1 md:flex-none`} onClick={() => aprovar(s)}>Aprovar</button>
+      <button className={`${btnPerigo} flex-1 md:flex-none`} onClick={() => { setRejeitando(s.id); setJustificativa(''); setErro('') }}>Rejeitar</button>
+    </div>
+  ))
+
   return (
     <div>
       <Titulo titulo="Aprovação de solicitações" subtitulo="Analise as solicitações pendentes e registre as retiradas." />
       {erro && <div className="mb-4 rounded border border-[#754437] bg-[#754437]/10 px-3 py-2 text-sm text-[#754437]">{erro}</div>}
 
       <h2 className="mb-2 font-semibold text-[#28374A]">Pendentes ({pendentes.length})</h2>
-      <div className="mb-6 overflow-x-auto rounded border border-[#6B6751] bg-[#F3EEE3]">
+      <div className="mb-6 space-y-2 md:hidden">
+        {pendentes.map((s) => {
+          const it = item(s.codigo)
+          return (
+            <div key={s.id} className={cardCls}>
+              <div className="mb-1 flex items-start justify-between gap-2">
+                <div>
+                  <div className="font-medium text-[#28374A]">{it.nome}</div>
+                  <div className="text-xs text-[#6B6751]">{s.solicitante} · {s.data}</div>
+                </div>
+                <TagStatus status={s.status} />
+              </div>
+              <div className="mb-3 flex flex-wrap items-center gap-2 text-sm text-[#28374A]">
+                <span>Qtd. <b>{s.qtd}</b></span>
+                <span className={s.qtd > it.quantidade ? 'font-semibold text-[#754437]' : ''}>Disponível <b>{it.quantidade}</b></span>
+                {estoqueBaixo(it) && <TagEstoqueBaixo />}
+              </div>
+              {renderAcoes(s)}
+            </div>
+          )
+        })}
+        {!pendentes.length && <div className="py-6 text-center text-sm text-[#6B6751]">Nenhuma solicitação pendente.</div>}
+      </div>
+      <div className="mb-6 hidden overflow-x-auto rounded border border-[#6B6751] bg-[#F3EEE3] md:block">
         <table className="w-full">
           <thead>
             <tr>
@@ -512,21 +578,7 @@ function TelaAprovacao({ usuario, itens, setItens, solicitacoes, setSolicitacoes
                   </td>
                   <td className={tdCls}>{s.data}</td>
                   <td className={tdCls}>
-                    {rejeitando === s.id ? (
-                      <div className="w-64 space-y-2">
-                        <label className="block text-xs font-semibold text-[#754437]">Justificativa *</label>
-                        <textarea className={inputCls} rows={2} value={justificativa} onChange={(e) => setJustificativa(e.target.value)} placeholder="Motivo da rejeição" />
-                        <div className="flex gap-2">
-                          <button className={btnPerigo} onClick={() => confirmarRejeicao(s)}>Confirmar rejeição</button>
-                          <button className={btnContorno} onClick={() => { setRejeitando(null); setJustificativa(''); setErro('') }}>Cancelar</button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex gap-2">
-                        <button className={btnSecundario} onClick={() => aprovar(s)}>Aprovar</button>
-                        <button className={btnPerigo} onClick={() => { setRejeitando(s.id); setJustificativa(''); setErro('') }}>Rejeitar</button>
-                      </div>
-                    )}
+                    {renderAcoes(s)}
                   </td>
                 </tr>
               )
@@ -543,21 +595,36 @@ function TelaAprovacao({ usuario, itens, setItens, solicitacoes, setSolicitacoes
       <h2 className="mb-2 font-semibold text-[#28374A]">Aprovadas aguardando retirada ({aprovadas.length})</h2>
       <div className="mb-6 space-y-2">
         {aprovadas.map((s) => (
-          <div key={s.id} className={`${cardCls} flex flex-wrap items-center justify-between gap-3`}>
+          <div key={s.id} className={`${cardCls} flex flex-col gap-3 md:flex-row md:items-center md:justify-between`}>
             <div>
-              <div className="flex items-center gap-2 text-sm font-medium text-[#28374A]">
+              <div className="flex flex-wrap items-center gap-2 text-sm font-medium text-[#28374A]">
                 {s.solicitante} · {item(s.codigo).nome} · {s.qtd} {item(s.codigo).unidade.toLowerCase()}(s) <TagStatus status={s.status} />
               </div>
               <div className="text-xs text-[#6B6751]">{s.registro}</div>
             </div>
-            <button className={btnPrimario} onClick={() => registrarRetirada(s)}>Registrar retirada</button>
+            <button className={`${btnPrimario} w-full md:w-auto`} onClick={() => registrarRetirada(s)}>Registrar retirada</button>
           </div>
         ))}
         {!aprovadas.length && <div className="text-sm text-[#6B6751]">Nenhuma solicitação aprovada aguardando retirada.</div>}
       </div>
 
       <h2 className="mb-2 font-semibold text-[#28374A]">Histórico</h2>
-      <div className="overflow-x-auto rounded border border-[#6B6751] bg-[#F3EEE3]">
+      <div className="space-y-2 md:hidden">
+        {historico.map((s) => (
+          <div key={s.id} className={cardCls}>
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <div className="font-medium text-[#28374A]">{item(s.codigo).nome}</div>
+                <div className="text-xs text-[#6B6751]">{s.solicitante} · Qtd. {s.qtd}</div>
+              </div>
+              <TagStatus status={s.status} />
+            </div>
+            <div className="mt-2 text-xs text-[#6B6751]">{s.registro}</div>
+            {s.justificativa && <div className="text-xs text-[#754437]">Justificativa: {s.justificativa}</div>}
+          </div>
+        ))}
+      </div>
+      <div className="hidden overflow-x-auto rounded border border-[#6B6751] bg-[#F3EEE3] md:block">
         <table className="w-full">
           <thead>
             <tr>
@@ -580,7 +647,6 @@ function TelaAprovacao({ usuario, itens, setItens, solicitacoes, setSolicitacoes
           </tbody>
         </table>
       </div>
-      <Requisitos codigos={['RF03', 'RF09', 'RF10', 'RN03', 'RN09', 'RN10']} />
     </div>
   )
 }
@@ -588,9 +654,9 @@ function TelaAprovacao({ usuario, itens, setItens, solicitacoes, setSolicitacoes
 function GraficoBarras({ dados, destaque }) {
   const max = Math.max(1, ...dados.map((d) => d.valor))
   return (
-    <div className="flex h-56 items-end gap-3 border-b border-l border-[#6B6751] px-3 pt-4">
+    <div className="flex h-48 items-end gap-1 border-b sm:h-56 sm:gap-3 border-l border-[#6B6751] px-3 pt-4">
       {dados.map((d) => (
-        <div key={d.rotulo} className="flex h-full flex-1 flex-col items-center justify-end gap-1">
+        <div key={d.rotulo} className="flex h-full min-w-0 flex-1 flex-col items-center justify-end gap-1">
           <span className="text-xs font-semibold text-[#28374A]">{d.valor}</span>
           <div className={`w-full max-w-12 rounded-t ${destaque && destaque(d) ? 'bg-[#754437]' : 'bg-[#28374A]'}`} style={{ height: `${(d.valor / max) * 80}%` }} />
           <span className="w-full truncate text-center text-[10px] text-[#6B6751]" title={d.rotulo}>{d.rotulo}</span>
@@ -653,7 +719,7 @@ function TelaRelatorios({ itens }) {
   return (
     <div>
       <Titulo titulo="Relatórios" subtitulo="Visualize indicadores do estoque a partir dos filtros." />
-      <div className={`${cardCls} mb-4 flex flex-wrap items-end gap-3`}>
+      <div className={`${cardCls} mb-4 grid grid-cols-2 items-end gap-3 sm:flex sm:flex-wrap`}>
         <div>
           <label className="mb-1 block text-xs font-semibold text-[#6B6751]">Período — de</label>
           <input type="date" className={inputCls} value={inicio} onChange={(e) => setInicio(e.target.value)} />
@@ -662,7 +728,7 @@ function TelaRelatorios({ itens }) {
           <label className="mb-1 block text-xs font-semibold text-[#6B6751]">até</label>
           <input type="date" className={inputCls} value={fim} onChange={(e) => setFim(e.target.value)} />
         </div>
-        <div className="w-48">
+        <div className="col-span-2 w-full sm:w-48">
           <label className="mb-1 block text-xs font-semibold text-[#6B6751]">Categoria</label>
           <select className={inputCls} value={categoria} onChange={(e) => setCategoria(e.target.value)}>
             <option value="">Todas</option>
@@ -671,17 +737,17 @@ function TelaRelatorios({ itens }) {
         </div>
       </div>
 
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
         {botoes.map((b) => (
           <button key={b.id} className={tipo === b.id ? btnPrimario : btnContorno} onClick={() => { setTipo(b.id); setMensagem('') }}>{b.rotulo}</button>
         ))}
-        <button className={`${btnSecundario} ml-auto`} onClick={() => setMensagem(`Relatório "${atual.titulo}" exportado (simulação) — período ${formatar(inicio)} a ${formatar(fim)}.`)}>Exportar</button>
+        <button className={`${btnSecundario} col-span-2 sm:ml-auto`} onClick={() => setMensagem(`Relatório "${atual.titulo}" exportado (simulação) — período ${formatar(inicio)} a ${formatar(fim)}.`)}>Exportar</button>
       </div>
 
       {mensagem && <div className="mb-4 rounded border border-[#6B6751] bg-[#F3EEE3] px-3 py-2 text-sm text-[#6B6751]">{mensagem}</div>}
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className={cardCls}>
+        <div className={`${cardCls} min-w-0`}>
           <div className="mb-2 flex items-center justify-between">
             <h2 className="font-semibold text-[#28374A]">{atual.titulo}</h2>
             <span className="text-xs text-[#6B6751]">{formatar(inicio)} a {formatar(fim)}{categoria ? ` · ${categoria}` : ''}</span>
@@ -692,7 +758,7 @@ function TelaRelatorios({ itens }) {
             <span className="flex items-center gap-1"><span className="inline-block h-3 w-3 bg-[#754437]" /> Estoque baixo</span>
           </div>
         </div>
-        <div className="overflow-x-auto rounded border border-[#6B6751] bg-[#F3EEE3]">
+        <div className="min-w-0 overflow-x-auto rounded border border-[#6B6751] bg-[#F3EEE3]">
           <table className="w-full">
             <thead>
               <tr>{atual.colunas.map((c) => <th key={c} className={thCls}>{c}</th>)}</tr>
@@ -708,16 +774,22 @@ function TelaRelatorios({ itens }) {
           </table>
         </div>
       </div>
-      <Requisitos codigos={['RF14', 'RN14']} />
     </div>
   )
 }
 
-function BarraSuperior({ usuario, onTrocarPerfil, onSair }) {
+const PERFIS = ['Gerente', 'Fornecedor', 'Funcionário', 'Administrador']
+
+function BarraSuperior({ usuario, onTrocarPerfil, onSair, onAbrirMenu }) {
   return (
-    <header className="flex items-center justify-between bg-[#28374A] px-4 py-3 text-[#F3EEE3]">
-      <div className="flex items-center gap-3">
-        <div className="relative h-8 w-8 overflow-hidden rounded border border-[#F3EEE3]/60">
+    <header className="sticky top-0 z-10 flex items-center justify-between gap-2 bg-[#28374A] px-3 py-3 text-[#F3EEE3] md:px-4">
+      <div className="flex items-center gap-2 md:gap-3">
+        <button className="flex h-9 w-9 flex-col items-center justify-center gap-1 rounded border border-[#F3EEE3]/60 md:hidden" onClick={onAbrirMenu} aria-label="Abrir menu">
+          <span className="block h-0.5 w-4 bg-[#F3EEE3]" />
+          <span className="block h-0.5 w-4 bg-[#F3EEE3]" />
+          <span className="block h-0.5 w-4 bg-[#F3EEE3]" />
+        </button>
+        <div className="relative hidden h-8 w-8 overflow-hidden rounded border border-[#F3EEE3]/60 sm:block">
           <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
             <line x1="0" y1="0" x2="100" y2="100" stroke="#F3EEE3" strokeWidth="1" vectorEffect="non-scaling-stroke" />
             <line x1="100" y1="0" x2="0" y2="100" stroke="#F3EEE3" strokeWidth="1" vectorEffect="non-scaling-stroke" />
@@ -726,34 +798,64 @@ function BarraSuperior({ usuario, onTrocarPerfil, onSair }) {
         <span className="text-lg font-bold tracking-wide">EstoqueEdu</span>
       </div>
       <div className="flex items-center gap-3 text-sm">
-        <div className="text-right">
-          <div className="font-semibold">{usuario.nome}</div>
-          <div className="text-xs opacity-80">Perfil: {usuario.perfil}</div>
+        <div className="min-w-0 text-right">
+          <div className="truncate font-semibold">{usuario.nome}</div>
+          <div className="text-xs opacity-80">{usuario.perfil}</div>
         </div>
-        <select className="rounded border border-[#F3EEE3]/60 bg-[#28374A] px-2 py-1 text-xs text-[#F3EEE3]" value={usuario.perfil} onChange={(e) => onTrocarPerfil(e.target.value)} title="Simular perfil">
-          {['Gerente', 'Fornecedor', 'Funcionário', 'Administrador'].map((p) => <option key={p}>{p}</option>)}
+        <select className="hidden rounded border border-[#F3EEE3]/60 bg-[#28374A] px-2 py-1 text-xs text-[#F3EEE3] md:block" value={usuario.perfil} onChange={(e) => onTrocarPerfil(e.target.value)} title="Simular perfil">
+          {PERFIS.map((p) => <option key={p}>{p}</option>)}
         </select>
-        <button className="rounded border border-[#F3EEE3]/60 px-3 py-1 text-xs hover:bg-[#F3EEE3]/10" onClick={onSair}>Sair</button>
+        <button className="hidden rounded border border-[#F3EEE3]/60 px-3 py-1 text-xs hover:bg-[#F3EEE3]/10 md:block" onClick={onSair}>Sair</button>
       </div>
     </header>
   )
 }
 
+function ListaMenu({ tela, onSelecionar, pendentes }) {
+  return (
+    <ul className="space-y-1">
+      {MENU.map((m) => (
+        <li key={m.id}>
+          <button className={`flex w-full items-center justify-between rounded px-3 py-2 text-left text-sm ${tela === m.id ? 'bg-[#D3C7AD] font-semibold text-[#28374A]' : 'hover:bg-[#F3EEE3]/10'}`} onClick={() => onSelecionar(m.id)}>
+            {m.rotulo}
+            {m.id === 'aprovacao' && pendentes > 0 && <span className="rounded bg-[#754437] px-1.5 text-xs text-[#F3EEE3]">{pendentes}</span>}
+          </button>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
 function MenuLateral({ tela, setTela, pendentes }) {
   return (
-    <nav className="w-56 shrink-0 bg-[#28374A] p-3 text-[#F3EEE3]">
+    <nav className="hidden w-56 shrink-0 bg-[#28374A] p-3 text-[#F3EEE3] md:block">
       <div className="mb-2 px-2 text-xs uppercase tracking-wider opacity-60">Menu</div>
-      <ul className="space-y-1">
-        {MENU.map((m) => (
-          <li key={m.id}>
-            <button className={`flex w-full items-center justify-between rounded px-3 py-2 text-left text-sm ${tela === m.id ? 'bg-[#D3C7AD] font-semibold text-[#28374A]' : 'hover:bg-[#F3EEE3]/10'}`} onClick={() => setTela(m.id)}>
-              {m.rotulo}
-              {m.id === 'aprovacao' && pendentes > 0 && <span className="rounded bg-[#754437] px-1.5 text-xs text-[#F3EEE3]">{pendentes}</span>}
-            </button>
-          </li>
-        ))}
-      </ul>
+      <ListaMenu tela={tela} onSelecionar={setTela} pendentes={pendentes} />
     </nav>
+  )
+}
+
+function MenuMobile({ usuario, tela, setTela, pendentes, onTrocarPerfil, onSair, onFechar }) {
+  return (
+    <div className="fixed inset-0 z-30 md:hidden">
+      <div className="absolute inset-0 bg-[#28374A]/60" onClick={onFechar} />
+      <nav className="absolute inset-y-0 left-0 flex w-72 max-w-[85%] flex-col bg-[#28374A] p-4 text-[#F3EEE3]">
+        <div className="mb-4 flex items-center justify-between">
+          <span className="text-lg font-bold">EstoqueEdu</span>
+          <button className="rounded border border-[#F3EEE3]/60 px-2 py-1 text-xs" onClick={onFechar} aria-label="Fechar menu">✕</button>
+        </div>
+        <div className="mb-4 rounded border border-[#F3EEE3]/30 p-3">
+          <div className="font-semibold">{usuario.nome}</div>
+          <label className="mt-2 block text-xs opacity-70">Perfil</label>
+          <select className="mt-1 w-full rounded border border-[#F3EEE3]/60 bg-[#28374A] px-2 py-1 text-sm text-[#F3EEE3]" value={usuario.perfil} onChange={(e) => onTrocarPerfil(e.target.value)}>
+            {PERFIS.map((p) => <option key={p}>{p}</option>)}
+          </select>
+        </div>
+        <div className="mb-2 px-2 text-xs uppercase tracking-wider opacity-60">Menu</div>
+        <ListaMenu tela={tela} onSelecionar={(id) => { setTela(id); onFechar() }} pendentes={pendentes} />
+        <button className="mt-auto rounded border border-[#F3EEE3]/60 px-3 py-2 text-sm" onClick={onSair}>Sair</button>
+      </nav>
+    </div>
   )
 }
 
@@ -762,6 +864,7 @@ export default function App() {
   const [tela, setTela] = useState('estoque')
   const [itens, setItens] = useState(ITENS_INICIAIS)
   const [solicitacoes, setSolicitacoes] = useState(SOLICITACOES_INICIAIS)
+  const [menuAberto, setMenuAberto] = useState(false)
 
   if (!usuario) {
     return <TelaLogin onEntrar={(u) => { setUsuario(u); setTela(u.perfil === 'Gerente' ? 'aprovacao' : 'estoque') }} />
@@ -769,13 +872,16 @@ export default function App() {
 
   const pendentes = solicitacoes.filter((s) => s.status === 'Pendente').length
   const props = { usuario, itens, setItens, solicitacoes, setSolicitacoes }
+  const trocarPerfil = (perfil) => setUsuario({ ...usuario, perfil })
+  const sair = () => { setMenuAberto(false); setUsuario(null) }
 
   return (
     <div className="flex min-h-screen flex-col bg-[#D3C7AD]">
-      <BarraSuperior usuario={usuario} onTrocarPerfil={(perfil) => setUsuario({ ...usuario, perfil })} onSair={() => setUsuario(null)} />
+      <BarraSuperior usuario={usuario} onTrocarPerfil={trocarPerfil} onSair={sair} onAbrirMenu={() => setMenuAberto(true)} />
+      {menuAberto && <MenuMobile usuario={usuario} tela={tela} setTela={setTela} pendentes={pendentes} onTrocarPerfil={trocarPerfil} onSair={sair} onFechar={() => setMenuAberto(false)} />}
       <div className="flex flex-1">
         <MenuLateral tela={tela} setTela={setTela} pendentes={pendentes} />
-        <main className="flex-1 overflow-x-hidden p-6">
+        <main className="min-w-0 flex-1 p-4 md:p-6">
           {tela === 'estoque' && <TelaEstoque {...props} />}
           {tela === 'solicitacao' && <TelaSolicitacao {...props} />}
           {tela === 'aprovacao' && <TelaAprovacao {...props} />}
