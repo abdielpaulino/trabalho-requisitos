@@ -22,7 +22,7 @@ Senha de todos os usuários de teste: `1234`
 | papelaria.sul  | Fornecedor    |
 | admin          | Administrador |
 
-O seletor de perfil na barra superior permite simular outro perfil sem sair do sistema.
+Para ver as telas de outro perfil, saia e entre com o usuário correspondente.
 
 ## Responsividade
 
@@ -43,10 +43,11 @@ O layout é responsivo:
 
 ## Prints para apresentação
 
-A pasta [`prints/`](prints) contém capturas da versão mobile dentro de uma moldura de celular:
+A pasta [`prints/`](prints) contém capturas da versão mobile dentro de uma moldura de celular, com fundo transparente:
 
-- `visao-geral-1.png` e `visao-geral-2.png` — slides 16:9 (3840×2160) com 4 telas cada
-- `01-login.png` … `08-menu.png` — cada tela individual, com fundo transparente
-
-![Visão geral 1](prints/visao-geral-1.png)
-![Visão geral 2](prints/visao-geral-2.png)
+| | | | |
+|:-:|:-:|:-:|:-:|
+| ![Login](prints/01-login.png) | ![Estoque](prints/02-estoque.png) | ![Cadastro de item](prints/03-novo-item.png) | ![Nova solicitação](prints/04-solicitacao.png) |
+| Login | Estoque | Cadastro de item | Nova solicitação |
+| ![Aprovação](prints/05-aprovacao.png) | ![Rejeição](prints/06-rejeicao.png) | ![Relatórios](prints/07-relatorios.png) | ![Menu](prints/08-menu.png) |
+| Aprovação | Rejeição com justificativa | Relatórios | Menu |

@@ -55,7 +55,7 @@ const CONSUMO_MENSAL = [
 const MENU = [
   { id: 'estoque', rotulo: 'Estoque / Itens' },
   { id: 'solicitacao', rotulo: 'Nova solicitação' },
-  { id: 'aprovacao', rotulo: 'Aprovação (Gerente)' },
+  { id: 'aprovacao', rotulo: 'Aprovações' },
   { id: 'relatorios', rotulo: 'Relatórios' },
 ]
 
@@ -107,10 +107,10 @@ function Titulo({ titulo, subtitulo }) {
 }
 
 function TelaLogin({ onEntrar }) {
-  const [login, setLogin] = useState('ana.gerente')
+  const [login, setLogin] = useState('')
   const [senha, setSenha] = useState('')
-  const [tentativas, setTentativas] = useState(3)
-  const [erro, setErro] = useState('Senha incorreta. Tentativa 3 de 5')
+  const [tentativas, setTentativas] = useState(2)
+  const [erro, setErro] = useState('')
   const [aviso, setAviso] = useState('')
   const bloqueado = tentativas >= 5
 
@@ -142,25 +142,19 @@ function TelaLogin({ onEntrar }) {
           <h1 className="text-lg font-semibold text-[#1B4F9C]">Acesso ao sistema</h1>
           <div>
             <label className="mb-1 block text-xs font-semibold text-[#4C7A1F]">Usuário</label>
-            <input className={inputCls} value={login} onChange={(e) => setLogin(e.target.value)} disabled={bloqueado} />
+            <input className={inputCls} value={login} onChange={(e) => setLogin(e.target.value)} placeholder="Digite seu usuário" disabled={bloqueado} />
           </div>
           <div>
             <label className="mb-1 block text-xs font-semibold text-[#4C7A1F]">Senha</label>
-            <input type="password" className={inputCls} value={senha} onChange={(e) => setSenha(e.target.value)} placeholder="••••" disabled={bloqueado} />
+            <input type="password" className={inputCls} value={senha} onChange={(e) => setSenha(e.target.value)} placeholder="Digite sua senha" disabled={bloqueado} />
           </div>
           {erro && <div className="rounded border border-[#C2452A] bg-[#C2452A]/10 px-3 py-2 text-sm font-medium text-[#C2452A]">{erro}</div>}
           <button type="submit" className={`${btnPrimario} w-full`} disabled={bloqueado}>Entrar</button>
           <div className="flex items-center justify-between border-t border-[#4C7A1F]/40 pt-3 text-xs">
             <span className="text-[#C2452A]">Após 5 tentativas o acesso será bloqueado</span>
-            <button type="button" className="font-semibold text-[#1B4F9C] underline" onClick={() => setAviso('Um link de recuperação foi enviado ao e-mail cadastrado (simulação).')}>Recuperar acesso</button>
+            <button type="button" className="font-semibold text-[#1B4F9C] underline" onClick={() => setAviso('Enviamos um link de recuperação para o e-mail cadastrado.')}>Recuperar acesso</button>
           </div>
           {aviso && <div className="rounded border border-[#4C7A1F] px-3 py-2 text-xs text-[#4C7A1F]">{aviso}</div>}
-          <div className="text-xs text-[#4C7A1F]">
-            <div className="font-semibold">Usuários de teste (senha 1234):</div>
-            {USUARIOS.map((u) => (
-              <button key={u.login} type="button" className="mr-2 underline" onClick={() => setLogin(u.login)}>{u.login}</button>
-            ))}
-          </div>
         </form>
       </div>
     </div>
@@ -477,7 +471,7 @@ function TelaAprovacao({ usuario, itens, setItens, solicitacoes, setSolicitacoes
         <Titulo titulo="Aprovação de solicitações" />
         <div className="rounded border border-[#C2452A] bg-[#FFFBF2] p-6 text-[#C2452A]">
           <div className="font-semibold">Acesso restrito</div>
-          <div className="text-sm">Somente usuários com perfil Gerente podem aprovar ou rejeitar solicitações. Use o seletor de perfil na barra superior para simular.</div>
+          <div className="text-sm">Somente usuários com perfil Gerente podem aprovar ou rejeitar solicitações.</div>
         </div>
       </div>
     )
@@ -741,7 +735,7 @@ function TelaRelatorios({ itens }) {
         {botoes.map((b) => (
           <button key={b.id} className={tipo === b.id ? btnPrimario : btnContorno} onClick={() => { setTipo(b.id); setMensagem('') }}>{b.rotulo}</button>
         ))}
-        <button className={`${btnSecundario} col-span-2 sm:ml-auto`} onClick={() => setMensagem(`Relatório "${atual.titulo}" exportado (simulação) — período ${formatar(inicio)} a ${formatar(fim)}.`)}>Exportar</button>
+        <button className={`${btnSecundario} col-span-2 sm:ml-auto`} onClick={() => setMensagem(`Relatório "${atual.titulo}" exportado com sucesso — período ${formatar(inicio)} a ${formatar(fim)}.`)}>Exportar</button>
       </div>
 
       {mensagem && <div className="mb-4 rounded border border-[#4C7A1F] bg-[#FFFBF2] px-3 py-2 text-sm text-[#4C7A1F]">{mensagem}</div>}
@@ -778,9 +772,7 @@ function TelaRelatorios({ itens }) {
   )
 }
 
-const PERFIS = ['Gerente', 'Fornecedor', 'Funcionário', 'Administrador']
-
-function BarraSuperior({ usuario, onTrocarPerfil, onSair, onAbrirMenu }) {
+function BarraSuperior({ usuario, onSair, onAbrirMenu }) {
   return (
     <header className="sticky top-0 z-10 flex items-center justify-between gap-2 bg-[#1B4F9C] px-3 py-3 text-[#FFFBF2] md:px-4">
       <div className="flex items-center gap-2 md:gap-3">
@@ -802,9 +794,6 @@ function BarraSuperior({ usuario, onTrocarPerfil, onSair, onAbrirMenu }) {
           <div className="truncate font-semibold">{usuario.nome}</div>
           <div className="text-xs opacity-80">{usuario.perfil}</div>
         </div>
-        <select className="hidden rounded border border-[#FFFBF2]/60 bg-[#1B4F9C] px-2 py-1 text-xs text-[#FFFBF2] md:block" value={usuario.perfil} onChange={(e) => onTrocarPerfil(e.target.value)} title="Simular perfil">
-          {PERFIS.map((p) => <option key={p}>{p}</option>)}
-        </select>
         <button className="hidden rounded border border-[#FFFBF2]/60 px-3 py-1 text-xs hover:bg-[#FFFBF2]/10 md:block" onClick={onSair}>Sair</button>
       </div>
     </header>
@@ -835,7 +824,7 @@ function MenuLateral({ tela, setTela, pendentes }) {
   )
 }
 
-function MenuMobile({ usuario, tela, setTela, pendentes, onTrocarPerfil, onSair, onFechar }) {
+function MenuMobile({ usuario, tela, setTela, pendentes, onSair, onFechar }) {
   return (
     <div className="fixed inset-0 z-30 md:hidden">
       <div className="absolute inset-0 bg-[#1B4F9C]/60" onClick={onFechar} />
@@ -846,10 +835,7 @@ function MenuMobile({ usuario, tela, setTela, pendentes, onTrocarPerfil, onSair,
         </div>
         <div className="mb-4 rounded border border-[#FFFBF2]/30 p-3">
           <div className="font-semibold">{usuario.nome}</div>
-          <label className="mt-2 block text-xs opacity-70">Perfil</label>
-          <select className="mt-1 w-full rounded border border-[#FFFBF2]/60 bg-[#1B4F9C] px-2 py-1 text-sm text-[#FFFBF2]" value={usuario.perfil} onChange={(e) => onTrocarPerfil(e.target.value)}>
-            {PERFIS.map((p) => <option key={p}>{p}</option>)}
-          </select>
+          <div className="text-xs opacity-80">{usuario.perfil}</div>
         </div>
         <div className="mb-2 px-2 text-xs uppercase tracking-wider opacity-60">Menu</div>
         <ListaMenu tela={tela} onSelecionar={(id) => { setTela(id); onFechar() }} pendentes={pendentes} />
@@ -872,13 +858,12 @@ export default function App() {
 
   const pendentes = solicitacoes.filter((s) => s.status === 'Pendente').length
   const props = { usuario, itens, setItens, solicitacoes, setSolicitacoes }
-  const trocarPerfil = (perfil) => setUsuario({ ...usuario, perfil })
   const sair = () => { setMenuAberto(false); setUsuario(null) }
 
   return (
     <div className="flex min-h-screen flex-col bg-[#F4DFAF]">
-      <BarraSuperior usuario={usuario} onTrocarPerfil={trocarPerfil} onSair={sair} onAbrirMenu={() => setMenuAberto(true)} />
-      {menuAberto && <MenuMobile usuario={usuario} tela={tela} setTela={setTela} pendentes={pendentes} onTrocarPerfil={trocarPerfil} onSair={sair} onFechar={() => setMenuAberto(false)} />}
+      <BarraSuperior usuario={usuario} onSair={sair} onAbrirMenu={() => setMenuAberto(true)} />
+      {menuAberto && <MenuMobile usuario={usuario} tela={tela} setTela={setTela} pendentes={pendentes} onSair={sair} onFechar={() => setMenuAberto(false)} />}
       <div className="flex flex-1">
         <MenuLateral tela={tela} setTela={setTela} pendentes={pendentes} />
         <main className="min-w-0 flex-1 p-4 md:p-6">
