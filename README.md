@@ -40,3 +40,13 @@ O layout é responsivo:
 | 3 | Nova solicitação de materiais | RF06, RF08, RN06, RN08 |
 | 4 | Aprovação de solicitações (Gerente) | RF03, RF09, RF10, RN03, RN09, RN10 |
 | 5 | Relatórios | RF14, RN14 |
+
+## Prints para apresentação
+
+A pasta [`prints/`](prints) contém capturas da versão mobile dentro de uma moldura de celular:
+
+- `visao-geral-1.png` e `visao-geral-2.png` — slides 16:9 (3840×2160) com 4 telas cada
+- `01-login.png` … `08-menu.png` — cada tela individual, com fundo transparente
+
+![Visão geral 1](prints/visao-geral-1.png)
+![Visão geral 2](prints/visao-geral-2.png)
